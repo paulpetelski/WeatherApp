@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     double tempF;
 
     // openweathermap api key
-    //String api_key = "7f7e170e04e91735105f7ea572e5ad77";
     public static final String TAG = "Main";
 
     TextView textView;
