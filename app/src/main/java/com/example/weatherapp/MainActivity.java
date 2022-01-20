@@ -23,6 +23,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,14 +53,15 @@ public class MainActivity extends AppCompatActivity {
     FusedLocationProviderClient fusedLocationClient;
     double latitude;
     double longitude;
-    String city;
+    String city, state;
     String api_url;
     double tempF;
 
     // openweathermap api key
     public static final String TAG = "Main";
 
-    TextView textView;
+    TextView location, temp;
+    ImageView sunny;
     Button button;
 
     @Override
@@ -67,7 +69,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = findViewById(R.id.textView);
+        location = findViewById(R.id.location);
+        temp = findViewById(R.id.temp);
+
+        sunny = findViewById(R.id.sunny);
+
         button = findViewById(R.id.button);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -82,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(longitude);
                 try {
                     getCity();
+                    getState();
                 } catch (IOException e) {
                        e.printStackTrace();
                 }
@@ -118,8 +125,13 @@ public class MainActivity extends AppCompatActivity {
                     // convert temperature from Kelvin to Fahrenheit
                     tempF = ((9.0/5.0)*(tempK-273.15)+32);
 
-                    // Print the weather
-                    textView.setText(("The temperature in " + city + " is " + (int) tempF + "°F"));
+                    // Print the location and weather
+                    location.setText(city + ", " + state);
+                    temp.setText((int) tempF + "°F");
+
+                    // TODO: add more icons for different weather
+                    // icons depending on weather
+                    sunny.setVisibility(View.VISIBLE);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -148,13 +160,25 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         if (addresses != null && addresses.size() > 0){
-            //String city = addresses.get(0).toString();
-            //System.out.println(city);
-            //System.out.println(addresses.get(0).getLocality());
             city = addresses.get(0).getLocality();
         }
 
         return city;
+    }
+
+    private String getState() throws IOException {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List <Address> addresses = geocoder.getFromLocation(latitude,longitude,1);
+        try{
+            addresses = geocoder.getFromLocation(latitude,longitude,1);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        if (addresses != null && addresses.size() > 0){
+            // getAdminArea returns State the city is in
+            state = addresses.get(0).getAdminArea();
+        }
+        return state;
     }
 
     /**

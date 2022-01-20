@@ -23,20 +23,43 @@
             android:textSize="20dp" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="40dp"
+            android:fontFamily="@font/fira_mono"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:text="Location"
+            />
+
+        <TextView
+            android:id="@+id/temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="80dp"
-            android:layout_marginTop="80dp"
-            android:layout_marginEnd="40dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginTop="150dp"
             android:fontFamily="@font/fira_mono"
-            android:text="Get Temperature!"
             android:textColor="@color/black"
             android:textSize="25dp"
-            android:textStyle="bold" />
+            android:text=" °F"
 
+            />
+
+        <ImageView
+            android:id="@+id/sunny"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sunny_color"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="220dp"
+            />
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
