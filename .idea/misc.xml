@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/petel/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/button.xml" value="0.5620512820512821" />
+        <entry key="..\:/Users/petel/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/cloudy.xml" value="0.365625" />
+        <entry key="..\:/Users/petel/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/sunny_color.xml" value="0.34791666666666665" />
         <entry key="..\:/Users/petel/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_main.xml" value="0.5546875" />
       </map>
     </option>

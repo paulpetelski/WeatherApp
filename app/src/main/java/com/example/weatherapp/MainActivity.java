@@ -40,6 +40,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "Main";
 
     TextView location, temp;
-    ImageView sunny;
+    ImageView sunny, cloudy;
     Button button;
 
     @Override
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         temp = findViewById(R.id.temp);
 
         sunny = findViewById(R.id.sunny);
+        cloudy = findViewById(R.id.cloudy);
 
         button = findViewById(R.id.button);
 
@@ -114,13 +116,23 @@ public class MainActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, api_url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
                 // log response from api
                 Log.d("api", response);
 
                 // parse JSON data
                 try {
                     JSONObject obj = new JSONObject(response);
+
                     double tempK = obj.getJSONObject("main").getDouble("temp");
+                    // sunny, cloudy, etc
+                    // weather is an array has [{}] so need to created JSONArray
+                    // then get the weather description using JSONObject to search that array
+                    JSONArray weatherArray = obj.getJSONArray("weather");
+                    JSONObject weatherObject = weatherArray.getJSONObject(0);
+                    // sunny, Clouds, etc
+                    String weatherDesc = weatherObject.getString("main");
+
 
                     // convert temperature from Kelvin to Fahrenheit
                     tempF = ((9.0/5.0)*(tempK-273.15)+32);
@@ -131,7 +143,18 @@ public class MainActivity extends AppCompatActivity {
 
                     // TODO: add more icons for different weather
                     // icons depending on weather
-                    sunny.setVisibility(View.VISIBLE);
+                    // only have sunny and cloudy icons so far
+                    if (weatherDesc.equals("Clouds"))
+                        cloudy.setVisibility(View.VISIBLE);
+                    else if(weatherDesc.equals("Clear"))
+                        sunny.setVisibility(View.VISIBLE);
+                    else if(weatherDesc.equals("Rain") || weatherDesc.equals("Drizzle")){
+                        cloudy.setVisibility(View.VISIBLE);
+                    } else if(weatherDesc.equals("Snow")){
+                        cloudy.setVisibility(View.VISIBLE);
+                    } else if(weatherDesc.equals("Thunderstorm")){
+                        cloudy.setVisibility(View.VISIBLE);
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
