@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,19 +10,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         android:background="@color/white"
         tools:context=".MainActivity">
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="370dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/button"
-            android:padding="10dp"
-            android:text="Refresh"
-            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/location"
@@ -35,42 +26,80 @@
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:text="Location"
-            />
+            android:text="Location" />
 
-        <TextView
-            android:id="@+id/temp"
+        <Button
+            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="370dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="80dp"
-            android:layout_marginTop="150dp"
-            android:fontFamily="@font/fira_mono"
-            android:textColor="@color/black"
-            android:textSize="25dp"
-            android:text=" °F"
-
+            android:background="@drawable/button"
+            android:padding="10dp"
+            android:text="Refresh"
+            android:textSize="20dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
             />
 
-        <ImageView
-            android:id="@+id/sunny"
-            android:visibility="invisible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/sunny"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="220dp"
-            />
+        <androidx.cardview.widget.CardView
+            android:layout_width="500dp"
+            android:layout_height="230dp"
+            android:layout_gravity="center"
+            card_view:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/teal_700"
+            app:cardMaxElevation="12dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
 
-        <ImageView
-            android:id="@+id/cloudy"
-            android:visibility="invisible"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/cloudy"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="220dp"
-            />
+            <TextView
+                android:id="@+id/temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/fira_mono"
+                android:textColor="@color/white"
+                android:textSize="35dp"
+                android:text=" °F"
+                />
+
+            <View
+                android:layout_marginTop="130dp"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#C2E7D9" />
+
+            <ImageView
+                android:id="@+id/sunny"
+                android:visibility="invisible"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/sunny"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="250dp"
+                />
+
+            <ImageView
+                android:id="@+id/cloudy"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/cloudy"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="220dp"
+                />
+
+
+        </androidx.cardview.widget.CardView>
+
+
+
     </RelativeLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
