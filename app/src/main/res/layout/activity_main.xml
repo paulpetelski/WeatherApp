@@ -87,11 +87,45 @@
             <ImageView
                 android:id="@+id/cloudy"
                 android:visibility="invisible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:src="@drawable/cloudy"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="220dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="250dp"
+                />
+
+            <ImageView
+                android:id="@+id/rainy"
+                android:visibility="invisible"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/rain"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="250dp"
+                />
+
+            <ImageView
+                android:id="@+id/thunderstorm"
+                android:visibility="invisible"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/thunderstorm"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="250dp"
+                />
+
+            <ImageView
+                android:id="@+id/snow"
+                android:visibility="invisible"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/snow"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="250dp"
                 />
 
 

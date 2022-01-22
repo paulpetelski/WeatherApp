@@ -62,32 +62,36 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "Main";
 
     TextView location, temp;
-    ImageView sunny, cloudy;
+    ImageView sunny, cloudy, rainy, thunderstorm, snow;
     Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        // text fields
         location = findViewById(R.id.location);
         temp = findViewById(R.id.temp);
-
+        // icons
         sunny = findViewById(R.id.sunny);
         cloudy = findViewById(R.id.cloudy);
-
+        rainy = findViewById(R.id.rainy);
+        thunderstorm = findViewById(R.id.thunderstorm);
+        snow = findViewById(R.id.snow);
+        // buttons
         button = findViewById(R.id.button);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
-        // on button press change text to show lat, long, and city
+        // on button press change text
         button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 getLastLocation();
 
                 System.out.println(latitude);
                 System.out.println(longitude);
+
                 try {
                     getCity();
                     getState();
@@ -149,11 +153,11 @@ public class MainActivity extends AppCompatActivity {
                     else if(weatherDesc.equals("Clear"))
                         sunny.setVisibility(View.VISIBLE);
                     else if(weatherDesc.equals("Rain") || weatherDesc.equals("Drizzle")){
-                        cloudy.setVisibility(View.VISIBLE);
+                        rainy.setVisibility(View.VISIBLE);
                     } else if(weatherDesc.equals("Snow")){
-                        cloudy.setVisibility(View.VISIBLE);
+                        snow.setVisibility(View.VISIBLE);
                     } else if(weatherDesc.equals("Thunderstorm")){
-                        cloudy.setVisibility(View.VISIBLE);
+                        thunderstorm.setVisibility(View.VISIBLE);
                     }
 
                 } catch (JSONException e) {
@@ -185,10 +189,14 @@ public class MainActivity extends AppCompatActivity {
         if (addresses != null && addresses.size() > 0){
             city = addresses.get(0).getLocality();
         }
-
         return city;
     }
 
+    /**
+     * Converts lat and long to name of State
+     * @return state user is located in
+     * @throws IOException
+     */
     private String getState() throws IOException {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List <Address> addresses = geocoder.getFromLocation(latitude,longitude,1);
