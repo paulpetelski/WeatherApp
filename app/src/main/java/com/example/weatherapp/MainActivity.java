@@ -1,31 +1,19 @@
 package com.example.weatherapp;
 
-import static com.google.android.gms.location.LocationRequest.create;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
-import android.location.LocationRequest;
 import android.os.Bundle;
-import android.os.Looper;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,10 +23,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
     FusedLocationProviderClient fusedLocationClient;
     double latitude;
     double longitude;
-    String city, state;
-    String api_url;
+    String city, state, weatherDesc;
+    String api_url, api_url_daily_forecast;
     double tempF;
 
     // openweathermap api key
@@ -89,9 +74,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v){
                 getLastLocation();
 
-                System.out.println(latitude);
-                System.out.println(longitude);
-
                 try {
                     getCity();
                     getState();
@@ -100,12 +82,63 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 // uses secrets gradle plugin to store api_key in local.properties which is not uploaded to github to key api_key private
-                api_url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + BuildConfig.Api_key;
+                api_url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + BuildConfig.Api_key;
+                api_url_daily_forecast = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&units=imperial&exclude=hourly,minutely&appid=" + BuildConfig.Api_key;
                 Log.d(TAG,api_url);
 
                 getWeatherFromApi();
+                System.out.println(api_url_daily_forecast);
+                getDailyWeather();
+
             }
         });
+    }
+
+    /**
+     * Get daily forecasts
+     *
+     */
+    public void getDailyWeather(){
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, api_url_daily_forecast, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                // log response from api
+                Log.d("api", response);
+
+                // parse JSON data
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    JSONArray dailyForecast = obj.getJSONArray("daily");
+                    JSONObject dailyObject = dailyForecast.getJSONObject(0);
+                    String dayUTC = dailyObject.getString("dt");
+                    // returns day and time in unix UTC
+                    // TODO: make method to convert to regular day and local time
+                    System.out.println(dayUTC);
+
+                    // days for forecast
+                    JSONObject dayOne = dailyForecast.getJSONObject(1);
+                    JSONObject dayTwo = dailyForecast.getJSONObject(2);
+                    JSONObject dayThree = dailyForecast.getJSONObject(3);
+
+                    int dayOneTempMax = (int) dayOne.getJSONObject("temp").getDouble("max");
+                    int dayTwoTempMax = (int) dayTwo.getJSONObject("temp").getDouble("max");
+                    int dayThreeTempMax = (int) dayThree.getJSONObject("temp").getDouble("max");
+                    System.out.println("Max Temps for next 3 days: " + dayOneTempMax + " " + dayTwoTempMax + " " + dayThreeTempMax);
+                    // TODO: add to display
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley","could not get data from API");
+            }
+        });
+        queue.add(stringRequest);
     }
 
     /**
@@ -128,37 +161,21 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     JSONObject obj = new JSONObject(response);
 
-                    double tempK = obj.getJSONObject("main").getDouble("temp");
+                    double tempF = obj.getJSONObject("main").getDouble("temp");
                     // sunny, cloudy, etc
                     // weather is an array has [{}] so need to created JSONArray
                     // then get the weather description using JSONObject to search that array
                     JSONArray weatherArray = obj.getJSONArray("weather");
                     JSONObject weatherObject = weatherArray.getJSONObject(0);
                     // sunny, Clouds, etc
-                    String weatherDesc = weatherObject.getString("main");
-
-
-                    // convert temperature from Kelvin to Fahrenheit
-                    tempF = ((9.0/5.0)*(tempK-273.15)+32);
+                    weatherDesc = weatherObject.getString("main");
 
                     // Print the location and weather
                     location.setText(city + ", " + state);
                     temp.setText((int) tempF + "°F");
 
-                    // TODO: add more icons for different weather
                     // icons depending on weather
-                    // only have sunny and cloudy icons so far
-                    if (weatherDesc.equals("Clouds"))
-                        cloudy.setVisibility(View.VISIBLE);
-                    else if(weatherDesc.equals("Clear"))
-                        sunny.setVisibility(View.VISIBLE);
-                    else if(weatherDesc.equals("Rain") || weatherDesc.equals("Drizzle")){
-                        rainy.setVisibility(View.VISIBLE);
-                    } else if(weatherDesc.equals("Snow")){
-                        snow.setVisibility(View.VISIBLE);
-                    } else if(weatherDesc.equals("Thunderstorm")){
-                        thunderstorm.setVisibility(View.VISIBLE);
-                    }
+                    showIcons();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -171,6 +188,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         queue.add(stringRequest);
+    }
+
+    public int convertToF(double kelvin){
+        return (int) (tempF = (int) ((9.0/5.0)*(kelvin-273.15)+32));
+    }
+
+    /**
+     * Display weather icons
+     * ex. sun, clouds, rain, snow
+     */
+    private void showIcons(){
+        if (weatherDesc.equals("Clouds"))
+            cloudy.setVisibility(View.VISIBLE);
+        else if(weatherDesc.equals("Clear"))
+            sunny.setVisibility(View.VISIBLE);
+        else if(weatherDesc.equals("Rain") || weatherDesc.equals("Drizzle")){
+            rainy.setVisibility(View.VISIBLE);
+        } else if(weatherDesc.equals("Snow")){
+            snow.setVisibility(View.VISIBLE);
+        } else if(weatherDesc.equals("Thunderstorm")){
+            thunderstorm.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
