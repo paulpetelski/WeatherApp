@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     // openweathermap api key
     public static final String TAG = "Main";
 
-    TextView location, temp;
+    TextView location, temp, dayOneMax, dayTwoMax, dayThreeMax, nextThreeDaysTitle;
     ImageView sunny, cloudy, rainy, thunderstorm, snow;
     Button button;
 
@@ -57,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
         // text fields
         location = findViewById(R.id.location);
         temp = findViewById(R.id.temp);
+        // daily weather forecast
+        nextThreeDaysTitle = findViewById(R.id.nextThreeDaysTitle);
+        dayOneMax = findViewById(R.id.dayOneMax);
+        dayTwoMax = findViewById(R.id.dayTwoMax);
+        dayThreeMax = findViewById(R.id.dayThreeMax);
         // icons
         sunny = findViewById(R.id.sunny);
         cloudy = findViewById(R.id.cloudy);
@@ -81,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                        e.printStackTrace();
                 }
 
-                // uses secrets gradle plugin to store api_key in local.properties which is not uploaded to github to key api_key private
+                // uses secrets gradle plugin to store api_key in local.properties which is not uploaded to github to keep api_key private
                 api_url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + BuildConfig.Api_key;
                 api_url_daily_forecast = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&units=imperial&exclude=hourly,minutely&appid=" + BuildConfig.Api_key;
                 Log.d(TAG,api_url);
@@ -127,6 +132,10 @@ public class MainActivity extends AppCompatActivity {
                     int dayThreeTempMax = (int) dayThree.getJSONObject("temp").getDouble("max");
                     System.out.println("Max Temps for next 3 days: " + dayOneTempMax + " " + dayTwoTempMax + " " + dayThreeTempMax);
                     // TODO: add to display
+                    dayOneMax.setText(dayOneTempMax + " °F");
+                    dayTwoMax.setText(dayTwoTempMax + " °F" );
+                    dayThreeMax.setText(dayThreeTempMax + " °F");
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -190,6 +199,11 @@ public class MainActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
+    /**
+     * Convert from kelvin to fahrenheit
+     * @param kelvin temperature
+     * @return temperature in fahrenheit
+     */
     public int convertToF(double kelvin){
         return (int) (tempF = (int) ((9.0/5.0)*(kelvin-273.15)+32));
     }
