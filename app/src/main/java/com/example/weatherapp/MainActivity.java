@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     String api_url, api_url_daily_forecast;
     double tempF;
 
-    // openweathermap api key
     public static final String TAG = "Main";
 
     TextView location, temp, dayOneMax, dayTwoMax, dayThreeMax, nextThreeDaysTitle;
@@ -95,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(api_url_daily_forecast);
                 getDailyWeather();
 
+
+                // practice City class
+                City city1 = new City(48.8781,87.6298);
+
+
             }
         });
     }
@@ -120,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                     String dayUTC = dailyObject.getString("dt");
                     // returns day and time in unix UTC
                     // TODO: make method to convert to regular day and local time
+
                     System.out.println(dayUTC);
 
                     // days for forecast
@@ -131,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                     int dayTwoTempMax = (int) dayTwo.getJSONObject("temp").getDouble("max");
                     int dayThreeTempMax = (int) dayThree.getJSONObject("temp").getDouble("max");
                     System.out.println("Max Temps for next 3 days: " + dayOneTempMax + " " + dayTwoTempMax + " " + dayThreeTempMax);
-                    // TODO: add to display
+                    // display temperatures for next three days
                     dayOneMax.setText(dayOneTempMax + " °F");
                     dayTwoMax.setText(dayTwoTempMax + " °F" );
                     dayThreeMax.setText(dayThreeTempMax + " °F");
@@ -231,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
      * @return city user is located in
      * @throws IOException
      */
+
     private String getCity() throws IOException {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         List <Address> addresses = geocoder.getFromLocation(latitude,longitude,1);

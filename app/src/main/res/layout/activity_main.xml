@@ -43,6 +43,7 @@
             />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardview"
             android:layout_width="500dp"
             android:layout_height="230dp"
             android:layout_gravity="center"
@@ -175,11 +176,7 @@
                 android:textSize="18dp"
                 android:text=" °F"
                 />
-
-
         </androidx.cardview.widget.CardView>
-
-
 
     </RelativeLayout>
 
