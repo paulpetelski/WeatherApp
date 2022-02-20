@@ -95,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 getDailyWeather();
 
 
-                // practice City class
-                City city1 = new City(48.8781,87.6298);
+
 
 
             }

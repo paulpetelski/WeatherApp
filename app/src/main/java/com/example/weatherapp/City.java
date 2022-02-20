@@ -43,6 +43,9 @@ public class City extends MainActivity {
         this.state = state;
     }
 
-
+    @Override
+    public String toString(){
+        return city + "," + state;
+    }
 
 }
